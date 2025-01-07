@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeta Security Suite</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+<style>
+    ...
+    .tab-link {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(0, 242, 254, 0.2);
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+    }
+
+    .tab-link:hover {
+        background: rgba(0, 242, 254, 0.2);
+        transform: translateY(-2px);
+    }
+</style>
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 242, 254, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 242, 254, 0.4); }
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            background-size: 200% 200%;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 1rem;
+        }
+
+        .slideshow {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            height: 350px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 1rem;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            animation: glowPulse 3s infinite;
+        }
+
+        .slides {
+            display: flex;
+            width: 900%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            width: 11.11%;
+            height: 100%;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 242, 254, 0.1);
+            color: white;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 242, 254, 0.2);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev { left: 1rem; }
+        .next { right: 1rem; }
+    </style>
+</head>
+<body class="text-white">
+
+<!-- Landing Page -->
+<div class="landing-page fixed inset-0 bg-gradient-to-br from-black to-gray-900 flex items-center justify-center z-50" id="landingPage">
+    <div class="landing-content text-center">
+        <img src="https://i.postimg.cc/g2Vpny21/letter-z-modern-creative-logo-design-1020200-16808-removebg-preview.png" 
+             alt="Zeta Logo" 
+             class="w-48 h-48 mx-auto"
+             style="animation: floatAnimation 3s ease-in-out infinite;">
+        <h1 class="text-5xl font-bold mt-8 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent animate__animated animate__fadeIn">
+            Zeta Security Suite
+        </h1>
+        <p class="text-gray-400 mt-4 mb-8 text-lg">Advanced System Protection - Free Version</p>
+        <button onclick="enterSite()" 
+                class="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 text-lg font-bold neon-button">
+            Enter Site
+        </button>
+    </div>
+
+    <style>
+        .landing-page {
+            transition: opacity 0.5s ease-out;
+        }
+
+        .landing-content {
+            animation: fadeScale 1s ease-out;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); }
+            50% { box-shadow: 0 0 50px rgba(0, 242, 254, 0.5); }
+        }
+
+        .neon-button {
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+    </style>
+</div>
+
+<!-- Main content container (initially hidden) -->
+<div class="main-content opacity-0 pointer-events-none transition-opacity duration-500" id="mainContent">
+
+<!-- Navigation Bar -->
+<nav class="fixed w-full z-40 bg-black/90 backdrop-blur-md border-b border-cyan-500/20">
+    <div class="container mx-auto px-6 py-3">
+        <div class="flex justify-between items-center">
+            <!-- Logo Section -->
+            <div class="flex items-center space-x-3">
+                <img src="https://i.postimg.cc/g2Vpny21/letter-z-modern-creative-logo-design-1020200-16808-removebg-preview.png" 
+                     alt="Zeta Logo" 
+                     class="h-10 w-10" 
+                     style="animation: floatAnimation 3s ease-in-out infinite;">
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        Zeta Security
+                    </h1>
+                    <p class="text-xs text-cyan-400">Free Version</p>
+                </div>
+            </div>
+
+            <!-- Navigation Items -->
+            <div class="flex items-center space-x-3">
+                <div class="neon-button px-4 py-2 rounded-lg text-sm glass-effect">
+                    Password: zeta123
+                </div>
+                <a href="#guide" class="neon-button px-4 py-2 rounded-lg text-sm glass-effect">
+                    Guide
+                </a>
+                <a href="https://discord.gg/ycmbJxAWrQ" 
+                   class="neon-button px-4 py-2 rounded-lg text-sm flex items-center glass-effect">
+                    <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.553.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.118.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+                    </svg>
+                    Discord
+                </a>
+                <a href="https://download1073.mediafire.com/ilb32yxwphagTn1fV83hnBmovNnMGoMyushDhJe8QK-YTCSOPku4tSogDSofBLbFCof0PkKAopoDIKqLHALDKleFa9wCapaJyGLR4E5OXEypOXhYTnx40prHq7Wg3JVMq72tje8vCcfxspi-s6ctwnWmLL-ILB8HBIPsYVa-1TY/1jvsoxk3au80kx4/Zeta_Spoofer.rar" 
+                   class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 text-sm">
+                    Download
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .glass-effect {
+        transition: all 0.3s ease;
+    }
+    
+    .glass-effect:hover {
+        background: rgba(0, 242, 254, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    }
+</style>
+
+<!-- Main Content Section -->
+<section class="pt-24 pb-16">
+    <div class="container mx-auto px-4">
+        <!-- Hero Section -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent animate__animated animate__fadeIn">
+                Advanced System Protection
+            </h1>
+            <p class="text-lg text-gray-400 mb-6 max-w-2xl mx-auto">
+                Professional-grade security with advanced features. Easy to use, completely free.
+            </p>
+        </div>
+
+        <!-- Slideshow Section -->
+        <div class="slideshow mb-8">
+            <div class="slides" id="slides">
+                <div class="slide"><img src="https://i.postimg.cc/KvQrFwnW/1.png" alt="Dashboard"></div>
+                <div class="slide"><img src="https://i.postimg.cc/fbSxcb64/2.png" alt="Features"></div>
+                <div class="slide"><img src="https://i.postimg.cc/gJ93NWWx/Screenshot-2025-01-07-014615.png" alt="Protection"></div>
+                <div class="slide"><img src="https://i.postimg.cc/xCKMZ4ft/Screenshot-2025-01-07-014623.png" alt="System"></div>
+                <div class="slide"><img src="https://i.postimg.cc/Bb4HfBts/Screenshot-2025-01-07-014630.png" alt="Advanced"></div>
+                <div class="slide"><img src="https://i.postimg.cc/yxj913SR/Screenshot-2025-01-07-014636.png" alt="Security"></div>
+                <div class="slide"><img src="https://i.postimg.cc/8PkMy4qm/Screenshot-2025-01-07-014644.png" alt="Tools"></div>
+                <div class="slide"><img src="https://i.postimg.cc/NfNTZTtq/Screenshot-2025-01-07-014659.png" alt="Interface"></div>
+                <div class="slide"><img src="https://i.postimg.cc/rwKWTmyd/Screenshot-2025-01-07-014713.png" alt="Complete"></div>
+            </div>
+            <button class="nav-button prev">←</button>
+            <button class="nav-button next">→</button>
+        </div>
+
+<!-- Security Analysis Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- VirusTotal -->
+    <div class="feature-card p-4 rounded-lg hover:transform hover:scale-[1.02] transition-all duration-300">
+        <div class="flex items-center space-x-3 mb-3">
+            <div class="flex-shrink-0">
+                <img src="https://i.postimg.cc/4NJ2zrsf/vi5728vec6-virustotal-logo-virustotal-logo-free-icon-icon-icons-com.png" alt="VirusTotal" class="w-6 h-6">
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-cyan-400">VirusTotal</h3>
+                <p class="text-[11px] text-gray-400">Last updated: 2h ago</p>
+            </div>
+        </div>
+        <div class="bg-black/40 rounded p-2 mb-2">
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Detection:</span>
+                <span class="text-xs text-cyan-400 font-mono">11/72</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                <div class="bg-cyan-400 h-1.5 rounded-full" style="width: 15%;"></div>
+            </div>
+        </div>
+        <p class="text-[10px] text-gray-500 leading-tight">Expected detections for system utilities. All major engines clear.</p>
+    </div>
+
+    <!-- KLEEN SCAN -->
+    <div class="feature-card p-4 rounded-lg hover:transform hover:scale-[1.02] transition-all duration-300">
+        <div class="flex items-center space-x-3 mb-3">
+            <div class="flex-shrink-0">
+                <img src="https://i.postimg.cc/HW0P8pGv/logo-mini.png" alt="KLEEN SCAN" class="w-6 h-6">
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-cyan-400">KLEEN SCAN</h3>
+                <p class="text-[11px] text-gray-400">Deep analysis</p>
+            </div>
+        </div>
+        <div class="bg-black/40 rounded p-2 mb-2">
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Risk Level:</span>
+                <span class="text-xs text-green-400 font-mono">8/100</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                <div class="bg-green-400 h-1.5 rounded-full" style="width: 8%;"></div>
+            </div>
+        </div>
+        <p class="text-[10px] text-gray-500 leading-tight">System modification tools may trigger alerts. Code verified safe.</p>
+    </div>
+
+    <!-- Windows Defender -->
+    <div class="feature-card p-4 rounded-lg hover:transform hover:scale-[1.02] transition-all duration-300">
+        <div class="flex items-center space-x-3 mb-3">
+            <div class="flex-shrink-0">
+                <img src="https://i.postimg.cc/cHwkmWvH/Windows-Defender-logo-svg.png" alt="Windows Defender" class="w-6 h-6">
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-cyan-400">Windows Defender</h3>
+                <p class="text-[11px] text-gray-400">Security assessment</p>
+            </div>
+        </div>
+        <div class="bg-black/40 rounded p-2 mb-2">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="text-center p-1 rounded bg-black/20">
+                    <span class="text-[10px] text-gray-400">Trust Score</span>
+                    <span class="block text-xs text-cyan-400 font-mono">Medium</span>
+                </div>
+                <div class="text-center p-1 rounded bg-black/20">
+                    <span class="text-[10px] text-gray-400">Status</span>
+                    <span class="block text-xs text-green-400">Approved</span>
+                </div>
+            </div>
+        </div>
+        <p class="text-[10px] text-gray-500 leading-tight">Requires permissions for system protection features.</p>
+    </div>
+</div>
+
+
+        <!-- Security Check Section -->
+        <div class="feature-card p-6 rounded-xl mb-8">
+            <h2 class="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                Security Verification
+            </h2>
+            <p class="text-gray-400 text-center mb-6 text-sm">Verified safe with multiple security engines</p>
+            <div class="w-full max-w-2xl mx-auto mb-8">
+                <img src="https://www.upload.ee/image/17579435/Real_Virus_Check.gif" alt="Security Check Results" class="w-full rounded-lg border border-cyan-500/20">
+            </div>
+        </div>
+
+        <style>
+            .feature-card {
+                animation: fadeIn 0.5s ease-out;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+<section class="py-12 overflow-hidden">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            User Reviews & Feedback
+        </h2>
+        <p class="text-gray-400 text-center mb-8 text-sm">Real feedback from our community</p>
+        
+        <div class="reviews-scroll">
+            <style>
+                .reviews-scroll {
+                    display: flex;
+                    overflow-x: auto;
+                    gap: 1rem;
+                    padding: 1rem;
+                    scroll-behavior: smooth;
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(0, 242, 254, 0.3) transparent;
+                }
+
+                .reviews-scroll::-webkit-scrollbar {
+                    height: 4px;
+                }
+
+                .reviews-scroll::-webkit-scrollbar-track {
+                    background: rgba(0, 0, 0, 0.2);
+                }
+
+                .reviews-scroll::-webkit-scrollbar-thumb {
+                    background: rgba(0, 242, 254, 0.3);
+                    border-radius: 2px;
+                }
+
+                .review-card {
+                    min-width: 300px;
+                    max-width: 300px;
+                    flex-shrink: 0;
+                    transition: all 0.3s ease;
+                    background: rgba(0, 0, 0, 0.4);
+                    border: 1px solid rgba(0, 242, 254, 0.2);
+                    backdrop-filter: blur(8px);
+                }
+
+                .review-card:hover {
+                    transform: translateY(-5px);
+                    border-color: rgba(0, 242, 254, 0.4);
+                    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+                }
+            </style>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">TTV_ShadowOps</p>
+                    <span class="text-gray-500 text-[10px]">2 hours ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"been waiting for something like this fr fr. works perfect with no issues yet"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">FaZe_Prodigy</p>
+                    <span class="text-gray-500 text-[10px]">2 days ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"best free tool on the market rn no cap. saved me so much $$$"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">xXGhost_KillerXx</p>
+                    <span class="text-gray-500 text-[10px]">1 week ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"using this for 3 months now, never had any problems works like a charm"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">AimGod_2k</p>
+                    <span class="text-gray-500 text-[10px]">2 weeks ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"works on latest patch, super ez setup thx devs fr fr"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">UnknownPlayer_YT</p>
+                    <span class="text-gray-500 text-[10px]">1 month ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"finally sumthing good thats free no 🧢 better than paid vers"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">SweatyGrinder</p>
+                    <span class="text-gray-500 text-[10px]">2 months ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"10/10 protection actually works unlike other tools frl"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">ToxicWarrior_TTV</p>
+                    <span class="text-gray-500 text-[10px]">4 months ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"bro this is actually crazy good, cant believe its free"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">ClutchMaster_69</p>
+                    <span class="text-gray-500 text-[10px]">6 months ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"used every other tool out there this is the best one hands down"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">HeadshotKing</p>
+                    <span class="text-gray-500 text-[10px]">8 months ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"devs always updating and fixing stuff instant support on discord"</p>
+            </div>
+
+            <div class="review-card p-4 rounded-lg">
+                <div class="flex justify-between items-start mb-3">
+                    <p class="text-cyan-400 text-xs font-semibold">ProSniper_OG</p>
+                    <span class="text-gray-500 text-[10px]">1 year ago</span>
+                </div>
+                <p class="text-gray-300 text-sm mb-2">"been here since day 1 still the best tool out there ong"</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Installation Guide Section -->
+<section id="guide" class="py-16">
+    <div class="container mx-auto px-4">
+        <!-- Guide Header -->
+        <div class="feature-card p-6 rounded-xl mb-8">
+            <h2 class="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                Installation Guide
+            </h2>
+            <p class="text-gray-400 text-center mb-6 text-sm">Complete step-by-step guide to get you started</p>
+
+            <!-- Guide Steps Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Step 1 -->
+                <div class="feature-card p-5 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-3">
+                        <span class="text-cyan-400 font-bold text-lg mr-3">01</span>
+                        <h3 class="text-cyan-400 font-bold">Download</h3>
+                    </div>
+                    <ul class="text-gray-400 space-y-2 text-sm">
+                        <li>• Download latest version</li>
+                        <li>• Check file integrity</li>
+                        <li>• Keep file secure</li>
+                        <li>• Use official link only</li>
+                    </ul>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="feature-card p-5 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-3">
+                        <span class="text-cyan-400 font-bold text-lg mr-3">02</span>
+                        <h3 class="text-cyan-400 font-bold">Extract</h3>
+                    </div>
+                    <ul class="text-gray-400 space-y-2 text-sm">
+                        <li>• Use password: zeta123</li>
+                        <li>• Extract to safe location</li>
+                        <li>• Keep original RAR file</li>
+                        <li>• Verify extracted files</li>
+                    </ul>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="feature-card p-5 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-3">
+                        <span class="text-cyan-400 font-bold text-lg mr-3">03</span>
+                        <h3 class="text-cyan-400 font-bold">Setup</h3>
+                    </div>
+                    <ul class="text-gray-400 space-y-2 text-sm">
+                        <li>• Run as administrator</li>
+                        <li>• Allow permissions</li>
+                        <li>• Complete initial scan</li>
+                        <li>• Configure settings</li>
+                    </ul>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="feature-card p-5 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="flex items-center mb-3">
+                        <span class="text-cyan-400 font-bold text-lg mr-3">04</span>
+                        <h3 class="text-cyan-400 font-bold">Finish</h3>
+                    </div>
+                    <ul class="text-gray-400 space-y-2 text-sm">
+                        <li>• Apply protection</li>
+                        <li>• Save all settings</li>
+                        <li>• Restart system</li>
+                        <li>• Verify protection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="mt-8 p-4 bg-black/30 rounded-lg border border-cyan-500/20">
+                <h4 class="text-cyan-400 font-bold mb-2">Important Notes:</h4>
+                <ul class="text-gray-400 space-y-1 text-sm">
+                    <li>• Always download from official sources</li>
+                    <li>• Join Discord for support and updates</li>
+                    <li>• Keep your system updated</li>
+                    <li>• Backup important files before installation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .feature-card {
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.9);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 0 30px rgba(0, 242, 254, 0.2);
+        }
+    </style>
+</section>
+
+<!-- Premium Section -->
+<section class="py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <div class="feature-card p-6 rounded-xl">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                    Premium Access
+                </h2>
+                <div class="flex items-center justify-center gap-2 mt-2">
+                    <span class="text-2xl money-glow">$</span>
+                    <span class="text-xl text-green-400 font-bold">10 USD</span>
+                    <span class="text-sm text-gray-400">Lifetime</span>
+                </div>
+            </div>
+
+            <!-- Payment Options -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <!-- BTC -->
+                <div class="bg-black/40 p-4 rounded-lg border border-orange-500/20 btc-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <img src="https://i.postimg.cc/13ZWmX33/btc-logo.png" alt="BTC" class="w-6 h-6">
+                            <span class="text-orange-400 font-bold btc-glow">Bitcoin</span>
+                        </div>
+                        <button onclick="toggleAddress('btc')" class="text-xs text-orange-400 hover:text-orange-300 bg-black/40 px-2 py-1 rounded">
+                            Show Address
+                        </button>
+                    </div>
+                    <div id="btc-address" class="hidden">
+                        <div class="bg-black/60 p-2 rounded text-xs text-gray-400 break-all select-all">
+                            026d76aa88513a3ffa8f965bd035162f37e925299c2067fd6df7b1e51a24339e9e
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ETH -->
+                <div class="bg-black/40 p-4 rounded-lg border border-gray-500/20 eth-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <img src="https://i.postimg.cc/fRBYGR3F/Ethereum-Logo-wine.png" alt="ETH" class="w-6 h-6">
+                            <span class="text-gray-300 font-bold eth-glow">Ethereum</span>
+                        </div>
+                        <button onclick="toggleAddress('eth')" class="text-xs text-gray-300 hover:text-gray-200 bg-black/40 px-2 py-1 rounded">
+                            Show Address
+                        </button>
+                    </div>
+                    <div id="eth-address" class="hidden">
+                        <div class="bg-black/60 p-2 rounded text-xs text-gray-400 break-all select-all">
+                            0xf7a8ebef241a70e769fff7d58d9a049e2ec88921
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Notice -->
+            <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-3 text-sm mb-4">
+                <p class="text-red-400 font-bold mb-1"⚠️ Important Security Notice:</p>
+                <ul class="text-gray-400 text-xs space-y-1">
+                    <li>• Verify addresses thoroughly before sending any payment</li>
+                    <li>• Never trust DM's claiming to be staff</li>
+                    <li>• Save blockchain transaction link and screenshots</li>
+                </ul>
+            </div>
+
+            <!-- Process Steps -->
+            <div class="bg-black/40 p-3 rounded-lg border border-cyan-500/20">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-cyan-400">After Payment:</span>
+                    <span class="text-xs text-gray-400">(Allow up to 48h for delivery)</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                    <div class="bg-black/40 p-2 rounded">
+                        <span class="text-cyan-400">1.</span> Copy blockchain transaction link 
+                    </div>
+                    <div class="bg-black/40 p-2 rounded">
+                        <span class="text-cyan-400">2.</span> Take payment screenshots
+                    </div>
+                    <div class="bg-black/40 p-2 rounded">
+                        <span class="text-cyan-400">3.</span> Join Discord & open ticket
+                    </div>
+                    <div class="bg-black/40 p-2 rounded">
+                        <span class="text-cyan-400">4.</span> Submit proof & await key
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .money-glow {
+            color: #22c55e;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+            animation: moneyPulse 2s infinite;
+        }
+        
+        .btc-glow {
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+            animation: btcPulse 2s infinite;
+        }
+        
+        .eth-glow {
+            text-shadow: 0 0 10px rgba(169, 169, 169, 0.5);
+            animation: ethPulse 2s infinite;
+        }
+        
+        @keyframes moneyPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+        }
+        
+        @keyframes btcPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 152, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 152, 0, 0.8); }
+        }
+        
+        @keyframes ethPulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(169, 169, 169, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(169, 169, 169, 0.8); }
+        }
+    </style>
+
+    <script>
+        function toggleAddress(type) {
+            const address = document.getElementById(`${type}-address`);
+            address.classList.toggle('hidden');
+        }
+    </script>
+</section>
+<!-- Scripts Section -->
+<script>
+    // Landing page transition
+    function enterSite() {
+        const landingPage = document.getElementById('landingPage');
+        const mainContent = document.getElementById('mainContent');
+        
+        landingPage.style.opacity = '0';
+        setTimeout(() => {
+            landingPage.style.display = 'none';
+            mainContent.style.opacity = '1';
+            mainContent.style.pointerEvents = 'auto';
+        }, 500);
+    }
+
+    // Slideshow functionality
+    let currentSlide = 0;
+    const slides = document.querySelector('.slides');
+    const totalSlides = 9; // Total number of images
+
+    function updateSlide() {
+        slides.style.transform = `translateX(-${currentSlide * (100 / totalSlides)}%)`;
+    }
+
+    // Navigation buttons
+    document.querySelector('.prev').addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlide();
+    });
+
+    document.querySelector('.next').addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlide();
+    });
+
+    // Auto advance slides
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlide();
+    }, 5000);
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+
+    // Initialize tooltips and effects
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add hover effects to all cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
